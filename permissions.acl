@@ -1,0 +1,117 @@
+rule GeneralPartnerAdminRole {
+    description: "Allow the full access with ADMIN role for General Partner"
+    participant(u): "org.venture.model.GeneralPartner"
+    operation: ALL
+    resource: "org.venture.**"
+    condition: (u.role == "ADMIN")
+    action: ALLOW
+}
+
+rule GeneralPartnerRoleOnInvestor {
+    description: "Operate all opertion for GeneralPartner on Investor"
+    participant: "org.venture.model.GeneralPartner"
+    operation: ALL
+    resource: "org.venture.model.Investor"
+    action: ALLOW
+}
+
+rule GeneralPartnerRoleOnStartup {
+    description: "Operate all opertion for GeneralPartner on Investor"
+    participant: "org.venture.model.GeneralPartner"
+    operation: ALL
+    resource: "org.venture.model.StartupOwner"
+    action: ALLOW
+}
+rule addExtraOpportunityAttributes{
+    description: "All can create"
+    participant: "org.venture.model.*"
+    operation: ALL
+    resource: "org.venture.asset.addExtraOpportunityAttributes"
+    action: ALLOW
+}
+
+
+rule assignOpportunity{
+    description: "All can create"
+    participant: "org.venture.model.*"
+    operation: ALL
+    resource: "org.venture.asset.assignOpportunity"
+    action: ALLOW
+}
+
+
+rule uploadTermSheet{
+    description: "All can create"
+    participant: "org.venture.model.*"
+    operation: ALL
+    resource: "org.venture.asset.uploadTermSheet"
+    action: ALLOW
+}
+
+rule verifyTermSheet{
+    description: "All can create"
+    participant: "org.venture.model.*"
+    operation: ALL
+    resource: "org.venture.asset.verifyTermSheet"
+    action: ALLOW
+}
+
+rule OpportunityOnStartupOwner {
+    description: "Allow the READ of a vehicle total access"
+    participant(m): "org.venture.model.StartupOwner"
+    operation: READ,UPDATE
+    resource(v): "org.venture.asset.Opportunity"
+    condition: (v.startup.getIdentifier() == m.getIdentifier())
+    action: ALLOW
+}
+
+rule GeneralPartnerNonAdminRole{
+    description: "READ and UPDATE access with NON_ADMIN role for General Partner"
+    participant: "org.venture.model.GeneralPartner"
+    operation: READ,UPDATE
+    resource: "org.venture.**"
+    action: ALLOW
+}
+
+
+rule Investor {
+    description: "Allow the owner of a vehicle total access"
+    participant(m): "org.venture.model.Investor"
+    operation: ALL
+    resource(v): "org.venture.model.Investor"
+    condition: (v.getIdentifier() == m.getIdentifier())
+    action: ALLOW
+}
+
+rule StartupOwnerRole {
+    description: "Allow the owner of the Startup of a Investor resource"
+    participant(m): "org.venture.model.StartupOwner"
+    operation: ALL
+    resource(v): "org.venture.model.StartupOwner"
+	condition: (v.getIdentifier() == m.getIdentifier())
+    action: ALLOW
+}
+
+rule SystemACL {
+  description:  "System ACL to permit all access"
+  participant: "org.hyperledger.composer.system.Participant"
+  operation: ALL
+  resource: "org.hyperledger.composer.system.**"
+  action: ALLOW
+}
+
+rule NetworkAdminUser {
+    description: "Grant business network administrators full access to user resources"
+    participant: "org.hyperledger.composer.system.NetworkAdmin"
+    operation: ALL
+    resource: "**"
+    action: ALLOW
+}
+
+rule NetworkAdminSystem {
+    description: "Grant business network administrators full access to system resources"
+    participant: "org.hyperledger.composer.system.NetworkAdmin"
+    operation: ALL
+    resource: "org.hyperledger.composer.system.**"
+    action: ALLOW
+}
