@@ -1,0 +1,137 @@
+
+
+
+install kyc chaincode
+1. docker exec -it cli bash
+2. configure peer0 for org1 
+
+export CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+export CORE_PEER_ADDRESS=peer0.org1.example.com:7051
+export CORE_PEER_LOCALMSPID="Org1MSP"
+export CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+
+3.peer channel join -b mychannel.block (if peer not joined channel earlier)
+
+4 peer chaincode install -n kyc -v 1.0 -p github.com/chaincode/kyc
+
+5. configure peer1 for org1
+  
+   export CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+export CORE_PEER_ADDRESS=peer1.org1.example.com:7051
+export CORE_PEER_LOCALMSPID="Org1MSP"
+export CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls/ca.crt
+
+
+  install the chaincode
+ peer chaincode install -n kyc -v 1.0 -p github.com/chaincode/kyc
+
+
+6. peer0 of org2 
+
+   export CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp
+export CORE_PEER_ADDRESS=peer0.org2.example.com:7051
+export CORE_PEER_LOCALMSPID="Org2MSP"
+export CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt
+
+install on peer0 of org2
+    peer chaincode install -n kyc -v 1.0 -p github.com/chaincode/kyc
+
+
+
+7. Instantiate the chaincode   (endorsment)  (while configuration is set for peer1 of org2)
+
+    peer chaincode instantiate -o orderer.example.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C mychannel -n kyc -v 1.0 -c '{"Args":["initLedger"]}' "OR ('Org1MSP.peer','Org2MSP.peer')"
+
+
+    do docker ps -s   (we will see chaincode container is running for kyc on peer1 or org2)
+
+  o/p :
+        hitesh@hitesh-OptiPlex-3020:~/fabric-dev-servers/fabric-samples/first-network$ docker ps -a
+CONTAINER ID        IMAGE                                                                                                 COMMAND                  CREATED             STATUS              PORTS                                              NAMES
+0306ff69e347        dev-peer1.org2.example.com-kyc-1.0-781e52fa589af8b02834e2b5ef51f3e16a4582deeb2bf489b964ded320662f38   "chaincode -peer.add…"   15 seconds ago      Up 13 seconds                                                          dev-peer1.org2.example.com-kyc-1.0
+24d3f652b39d        hyperledger/fabric-tools:latest                                                                       "/bin/bash"              2 hours ago         Up 2 hours                                                             cli
+f092ff0f449c        hyperledger/fabric-peer:latest                                                                        "peer node start"        2 hours ago         Up 2 hours          0.0.0.0:8051->7051/tcp, 0.0.0.0:8053->7053/tcp     peer1.org1.example.com
+eac815ba54cb        hyperledger/fabric-peer:latest            
+
+
+
+8.query the data from  state DB  
+
+  8.1 pass 'queryAllPersons' as function name as argument with no other args(peer1 of org2 query data)
+
+   peer chaincode query -C mychannel -n kyc -c '{"Args":["queryAllPersons"]}'      
+
+
+   o/p:
+
+   root@24d3f652b39d:/opt/gopath/src/github.com/hyperledger/fabric/peer# 
+root@24d3f652b39d:/opt/gopath/src/github.com/hyperledger/fabric/peer# peer chaincode query -C mychannel -n kyc -c '{"Args":["queryAllPersons"]}'
+2019-09-17 13:41:02.954 UTC [main] InitCmd -> WARN 001 CORE_LOGGING_LEVEL is no longer supported, please use the FABRIC_LOGGING_SPEC environment variable
+2019-09-17 13:41:02.958 UTC [main] SetOrdererEnv -> WARN 002 CORE_LOGGING_LEVEL is no longer supported, please use the FABRIC_LOGGING_SPEC environment variable
+[]
+
+
+ there is no data  in ledger so we got [] empty.
+
+
+9. invoke chaincode : his transaction will cut a new block and update the state DB.(peer1 of org2)
+
+   9.1 
+peer chaincode invoke -o orderer.example.com:7050 --tls true --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C mychannel -n kyc --peerAddresses peer0.org1.example.com:7051 --tlsRootCertFiles /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt -c '{"Args":["initLedger"]}'            
+
+
+
+
+10. query all person  from ledger (peer1.org2.example.com:7051)
+
+   peer chaincode query -C mychannel -n kyc -c '{"Args":["queryAllPersons"]}'
+
+11. query a Person  from ledger (peer1.org2.example.com:7051)
+
+   peer chaincode query -C mychannel -n kyc -c '{"Args":["queryPerson","PERSON0"]}'
+
+ o/p: root@24d3f652b39d:/opt/gopath/src/github.com/hyperledger/fabric/peer# peer chaincode query -C mychannel -n kyc -c '{"Args":["queryPerson","PERSON0"]}'
+2019-09-18 06:59:05.870 UTC [main] InitCmd -> WARN 001 CORE_LOGGING_LEVEL is no longer supported, please use the FABRIC_LOGGING_SPEC environment variable
+2019-09-18 06:59:05.873 UTC [main] SetOrdererEnv -> WARN 002 CORE_LOGGING_LEVEL is no longer supported, please use the FABRIC_LOGGING_SPEC environment variable
+
+{"dateofbirth":"15-12-1990","gender":"male","name":"Hitesh","ssn":"ssnhit123"}
+root@24d3f652b39d:/opt/gopath/src/github.com/hyperledger/fabric/peer# 
+
+
+
+12. query a Person from ledger (peer1.org1.example.com:7051) first set environment variable for peer1 of org1 
+
+   peer chaincode query -C mychannel -n kyc -c '{"Args":["queryPerson","PERSON0"]}'
+
+
+
+13.invoke kyc to create new Person (createPerson)
+
+
+  createPerson
+
+peer chaincode invoke -o orderer.example.com:7050 --tls true --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C mychannel -n kyc --peerAddresses peer0.org1.example.com:7051 --tlsRootCertFiles /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt -c '{"Args":["createPerson","Person4","Ross","ssnross123","10-12-1989","male"]}'            
+
+
+
+14. query newly created Person
+
+   peer chaincode query -C mychannel -n kyc -c '{"Args":["queryPerson","Person4"]}'
+
+o/p:
+
+  {"dateofbirth":"10-12-1989","gender":"male","name":"Ross","ssn":"ssnross123"}
+
+
+15. 
+
+
+
+
+
+
+
+
+//tips
+1 get all installed chaincode on
+peer chaincode list --channelID=mychannel --installed
