@@ -1,0 +1,235 @@
+{
+	"name": "first-network",
+	"version": "1.0.0",
+	"license": "Apache-2.0",
+	"client": {
+		"tlsEnable": true,
+		"adminUser": "admin",
+		"adminPassword": "adminpw",
+		"enableAuthentication": true,
+		"organization": "Org1",
+		"connection": {
+			"timeout": {
+				"peer": {
+					"endorser": "300"
+				},
+				"orderer": "300"
+			}
+		}
+	},
+	"channels": {
+		"mychannel": {
+			"orderers": ["orderer.example.com"],
+			"peers": {
+				"peer0.org1.example.com": {
+					"ledgerQuery": true
+				}
+			}
+		}
+	},
+	"organizations": {
+		"Org1": {
+			"mspid": "Org1MSP",
+			"peers": ["peer0.org1.example.com", "peer1.org1.example.com"],
+			"certificateAuthorities": ["ca-org1"],
+			"adminPrivateKey": {
+				"path": "/home/hitesh/fabric-dev-servers/fabric-samples/first-network/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/24d5b2b29ec3f411119b33393c1305b1e13dd4e8f0c51d9971f328948c55e6d5_sk"
+			},
+			"signedCert": {
+				"path": "/home/hitesh/fabric-dev-servers/fabric-samples/first-network/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem"
+			}
+		},
+		"Org2MSP": {
+			"mspid": "Org2MSP",
+			"adminPrivateKey": {
+			  "path":
+				"/home/hitesh/fabric-dev-servers/fabric-samples/first-network/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/keystore"
+			}
+		  },
+		  "Org3MSP": {
+			"mspid": "Org3MSP",
+			"adminPrivateKey": {
+			  "path":
+				"/home/hitesh/fabric-dev-servers/fabric-samples/first-network/crypto-config/peerOrganizations/org3.example.com/users/Admin@org3.example.com/msp/keystore"
+			}
+		  },
+		  "Org4MSP": {
+			"mspid": "Org4MSP",
+			"adminPrivateKey": {
+			  "path":
+				"/home/hitesh/fabric-dev-servers/fabric-samples/first-network/crypto-config/peerOrganizations/org4.example.com/users/Admin@org4.example.com/msp/keystore"
+			}
+		  },
+		  "Org5MSP": {
+			"mspid": "Org5MSP",
+			"adminPrivateKey": {
+			  "path":
+				"/home/hitesh/fabric-dev-servers/fabric-samples/first-network/crypto-config/peerOrganizations/org5.example.com/users/Admin@org5.example.com/msp/keystore"
+			}
+		  }
+		},
+	
+
+	"peers": {
+		"peer0.org1.example.com": {
+			"url": "grpcs://localhost:7051",
+			"grpcOptions": {
+				"ssl-target-name-override": "peer0.org1.example.com"
+			},
+			"tlsCACerts": {
+				"path": "/home/hitesh/fabric-dev-servers/fabric-samples/first-network/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt"
+			}
+		},
+        "peer1.org1.example.com": {
+          "tlsCACerts": {
+            "path":
+              "/home/hitesh/fabric-dev-servers/fabric-samples/first-network/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls/ca.crt"
+          },
+          "url": "grpcs://localhost:8051",
+          
+          "grpcOptions": {
+            "ssl-target-name-override": "peer1.org1.example.com"
+          }
+        },
+        "peer0.org2.example.com": {
+          "tlsCACerts": {
+            "path":
+              "/home/hitesh/fabric-dev-servers/fabric-samples/first-network/crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt"
+          },
+          "url": "grpcs://localhost:9051",
+          "grpcOptions": {
+            "ssl-target-name-override": "peer0.org2.example.com"
+          }
+        },
+        "peer1.org2.example.com": {
+          "tlsCACerts": {
+            "path":
+              "/home/hitesh/fabric-dev-servers/fabric-samples/first-network/crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/tls/ca.crt"
+          },
+          "url": "grpcs://localhost:10051",
+          "grpcOptions": {
+            "ssl-target-name-override": "peer1.org2.example.com"
+          }
+        },
+        "peer0.org3.example.com": {
+          "tlsCACerts": {
+            "path":
+              "/home/hitesh/fabric-dev-servers/fabric-samples/first-network/crypto-config/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/tls/ca.crt"
+          },
+          "url": "grpcs://localhost:11051",
+          "grpcOptions": {
+            "ssl-target-name-override": "peer0.org3.example.com"
+          }
+        },
+        "peer1.org3.example.com": {
+          "tlsCACerts": {
+            "path":
+              "/home/hitesh/fabric-dev-servers/fabric-samples/first-network/crypto-config/peerOrganizations/org3.example.com/peers/peer1.org3.example.com/tls/ca.crt"
+          },
+          "url": "grpcs://localhost:12051",
+          "grpcOptions": {
+            "ssl-target-name-override": "peer1.org3.example.com"
+          }
+        },
+        "peer0.org4.example.com": {
+          "tlsCACerts": {
+            "path":
+              "/home/hitesh/fabric-dev-servers/fabric-samples/first-network/crypto-config/peerOrganizations/org4.example.com/peers/peer0.org4.example.com/tls/ca.crt"
+          },
+          "url": "grpcs://localhost:13051",
+          "grpcOptions": {
+            "ssl-target-name-override": "peer0.org4.example.com"
+          }
+        },
+        "peer1.org4.example.com": {
+          "tlsCACerts": {
+            "path":
+              "/home/hitesh/fabric-dev-servers/fabric-samples/first-network/crypto-config/peerOrganizations/org4.example.com/peers/peer1.org4.example.com/tls/ca.crt"
+          },
+          "url": "grpcs://localhost:14051",
+          "grpcOptions": {
+            "ssl-target-name-override": "peer1.org4.example.com"
+          }
+        },
+        "peer0.org5.example.com": {
+          "tlsCACerts": {
+            "path":
+              "/home/hitesh/fabric-dev-servers/fabric-samples/first-network/crypto-config/peerOrganizations/org5.example.com/peers/peer0.org5.example.com/tls/ca.crt"
+          },
+          "url": "grpcs://localhost:15051",
+          "grpcOptions": {
+            "ssl-target-name-override": "peer0.org5.example.com"
+          }
+		},
+		"peer1.org5.example.com": {
+			"tlsCACerts": {
+			  "path":
+				"/home/hitesh/fabric-dev-servers/fabric-samples/first-network/crypto-config/peerOrganizations/org5.example.com/peers/peer1.org5.example.com/tls/ca.crt"
+			},
+			"url": "grpcs://localhost:16051",
+			"grpcOptions": {
+			  "ssl-target-name-override": "peer1.org5.example.com"
+			}
+		  }
+	},
+	"certificateAuthorities": {
+		"ca-org1": {
+			"url": "https://localhost:7054",
+			"httpOptions": {
+				"verify": false
+			},
+			"tlsCACerts": {
+				"path": "/home/hitesh/fabric-dev-servers/fabric-samples/first-network/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem"
+			},
+
+			"caName": "ca-org1"
+		},
+		"ca-org2": {
+			"url": "https://localhost:8054",
+			"httpOptions": {
+				"verify": false
+			},
+			"tlsCACerts": {
+				"path": "/home/hitesh/fabric-dev-servers/fabric-samples/first-network/crypto-config/peerOrganizations/org2.example.com/ca/ca.org2.example.com-cert.pem"
+			},
+
+			"caName": "ca-org2"
+		},
+		
+		"ca-org3": {
+			"url": "https://localhost:9054",
+			"httpOptions": {
+				"verify": false
+			},
+			"tlsCACerts": {
+				"path": "/home/hitesh/fabric-dev-servers/fabric-samples/first-network/crypto-config/peerOrganizations/org3.example.com/ca/ca.org3.example.com-cert.pem"
+			},
+
+			"caName": "ca-org3"
+		},
+		
+		"ca-org4": {
+			"url": "https://localhost:10054",
+			"httpOptions": {
+				"verify": false
+			},
+			"tlsCACerts": {
+				"path": "/home/hitesh/fabric-dev-servers/fabric-samples/first-network/crypto-config/peerOrganizations/org4.example.com/ca/ca.org4.example.com-cert.pem"
+			},
+
+			"caName": "ca-org4"
+		},
+		
+		"ca-org5": {
+			"url": "https://localhost:11054",
+			"httpOptions": {
+				"verify": false
+			},
+			"tlsCACerts": {
+				"path": "/home/hitesh/fabric-dev-servers/fabric-samples/first-network/crypto-config/peerOrganizations/org5.example.com/ca/ca.org5.example.com-cert.pem"
+			},
+
+			"caName": "ca-org5"
+		}
+	}
+}
