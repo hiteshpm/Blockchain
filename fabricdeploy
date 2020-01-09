@@ -135,3 +135,7 @@ o/p:
 //tips
 1 get all installed chaincode on
 peer chaincode list --channelID=mychannel --installed
+
+//bookmarks
+git clone https://github.com/vishal3152/AIDChaincode.git
+https://github.com/hlf-go/writing-chaincode#smallestchaincode
